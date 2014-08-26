@@ -6,16 +6,22 @@
 
 package automatabuilder;
 
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author menegeps
  */
 public class BuilderInterface extends javax.swing.JFrame {
-
+    DefaultTableModel modelo;
     /**
      * Creates new form BuilderInterface
      */
     public BuilderInterface() {
+        String[] cabecera={};
+        String[][] datos = {};
+        modelo = new DefaultTableModel(datos, cabecera);   
         initComponents();
     }
 
@@ -34,6 +40,9 @@ public class BuilderInterface extends javax.swing.JFrame {
         tfAlfabeto = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         tfCadena = new javax.swing.JTextField();
+        panelTabla = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaTransisiones = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Automata Builder  v1.0");
@@ -79,23 +88,43 @@ public class BuilderInterface extends javax.swing.JFrame {
             }
         });
 
+        panelTabla.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tablaTransisiones.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaTransisiones);
+
+        panelTabla.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 470, 180));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(comboNoEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfAlfabeto, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfCadena, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboNoEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfAlfabeto, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfCadena, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -109,7 +138,9 @@ public class BuilderInterface extends javax.swing.JFrame {
                     .addComponent(tfAlfabeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(tfCadena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(359, Short.MAX_VALUE))
+                .addGap(39, 39, 39)
+                .addComponent(panelTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -121,15 +152,14 @@ public class BuilderInterface extends javax.swing.JFrame {
 
     private void tfAlfabetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAlfabetoActionPerformed
         String []alfabeto1 = tfAlfabeto.getText().split(",");
-        char [] alfabeto = new char[alfabeto1.length];
-        int i =0;
-        for (String c : alfabeto1) {            
-            alfabeto[i++] = c.charAt(0);                        
-        }
-         for (int j = 0; j < alfabeto.length; j++) {
-              System.out.println(alfabeto1[j]);
-        }
-        System.out.println("El alfabeto es: {"+tfAlfabeto.getText()+"}");
+        modelo.setColumnIdentifiers(alfabeto1);
+         tablaTransisiones.setModel(modelo);
+        //char [] alfabeto = new char[alfabeto1.length];
+       // int i =0;
+        //for (String c : alfabeto1) {            
+          //  alfabeto[i++] = c.charAt(0);                        
+       // }
+        
     }//GEN-LAST:event_tfAlfabetoActionPerformed
 
     private void tfCadenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfCadenaActionPerformed
@@ -150,6 +180,9 @@ public class BuilderInterface extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel panelTabla;
+    private javax.swing.JTable tablaTransisiones;
     private javax.swing.JTextField tfAlfabeto;
     private javax.swing.JTextField tfCadena;
     // End of variables declaration//GEN-END:variables
