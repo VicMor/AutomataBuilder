@@ -41,7 +41,7 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         panelTabla = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaTransisiones = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         panelDatos = new javax.swing.JPanel();
         tfAlfabeto = new javax.swing.JTextField();
@@ -71,10 +71,10 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         ));
         jScrollPane1.setViewportView(tablaTransisiones);
 
-        jButton1.setText("Guardar datos");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setText("Guardar datos");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
 
@@ -89,7 +89,7 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -102,10 +102,10 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelTablaLayout.createSequentialGroup()
                         .addGap(34, 34, 34)
-                        .addComponent(jButton1)
+                        .addComponent(btnGuardar)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)))
-                .addGap(0, 9, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         panelDatos.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -221,7 +221,7 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
     private void tfAlfabetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAlfabetoActionPerformed
         String []alfabeto = tfAlfabeto.getText().split(",");
         String []cabecera = new String[alfabeto.length+1];
-        cabecera[0] = "State/Input";
+        cabecera[0] = "Estado/Entrada";
         for (int i = 0; i < alfabeto.length; i++) {
             cabecera[i+1]= alfabeto[i]; 
         }
@@ -248,17 +248,22 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
 
     private void tfCadenaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfCadenaFocusLost
         System.out.println("La cadena a reconocer es: "+ tfCadena.getText());
+        
     }//GEN-LAST:event_tfCadenaFocusLost
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        tfCadena.setEnabled(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+             for (int i = 0; i < tablaTransisiones.getColumnCount(); i++) {
+                for (int j = 0; j < tablaTransisiones.getRowCount(); j++) {
+                    System.out.println("Dato:");
+                }
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     private int numEstados;
     private String[] estados = {"q\u2081","q\u2082","q\u2083","q\u2084","q\u2085","q\u2086","q\u2087","q\u2088","q\u2089","q\u2081\u2080"};
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox comboNoEstados;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
