@@ -235,11 +235,11 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
     }//GEN-LAST:event_tfCadenaActionPerformed
 
     private void tfAlfabetoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfAlfabetoFocusLost
-        String []alfabeto1 = tfAlfabeto.getText().split(",");
-        String []cabecera = new String[alfabeto1.length+1];
+        String []alfabeto = tfAlfabeto.getText().split(",");
+        String []cabecera = new String[alfabeto.length+1];
         cabecera[0] = "State/Input";
-        for (int i = 0; i < alfabeto1.length; i++) {
-            cabecera[i+1]= alfabeto1[i];
+        for (int i = 0; i < alfabeto.length; i++) {
+            cabecera[i+1]= alfabeto[i];
         }
         modelo.setColumnIdentifiers(cabecera);
         tablaTransisiones.setModel(modelo);       
