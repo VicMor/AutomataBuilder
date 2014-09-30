@@ -10,7 +10,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-
+ 
 /**
  *
  * @author menegeps
@@ -26,8 +26,7 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         String[][] datos = {};        
         modelo = new DefaultTableModel(datos, cabecera);
         tablaTransisiones.setModel(modelo);
-        tablaTransisiones.getModel().addTableModelListener(this);
-        
+        tablaTransisiones.getModel().addTableModelListener(this);        
     }
 
     /**
@@ -220,13 +219,13 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
     }//GEN-LAST:event_comboNoEstadosActionPerformed
 
     private void tfAlfabetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAlfabetoActionPerformed
-        String []alfabeto1 = tfAlfabeto.getText().split(",");
-        String []alfabeto = new String[alfabeto1.length+1];
-        alfabeto[0] = "State/Input";
-        for (int i = 0; i < alfabeto1.length; i++) {
-            alfabeto[i+1]= alfabeto1[i]; 
+        String []alfabeto = tfAlfabeto.getText().split(",");
+        String []cabecera = new String[alfabeto.length+1];
+        cabecera[0] = "State/Input";
+        for (int i = 0; i < alfabeto.length; i++) {
+            cabecera[i+1]= alfabeto[i]; 
         }
-        modelo.setColumnIdentifiers(alfabeto);
+        modelo.setColumnIdentifiers(cabecera);
         tablaTransisiones.setModel(modelo);       
         comboNoEstados.setEnabled(true);
     }//GEN-LAST:event_tfAlfabetoActionPerformed
@@ -237,12 +236,12 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
 
     private void tfAlfabetoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfAlfabetoFocusLost
         String []alfabeto1 = tfAlfabeto.getText().split(",");
-        String []alfabeto = new String[alfabeto1.length+1];
-        alfabeto[0] = "State/Input";
+        String []cabecera = new String[alfabeto1.length+1];
+        cabecera[0] = "State/Input";
         for (int i = 0; i < alfabeto1.length; i++) {
-            alfabeto[i+1]= alfabeto1[i];
+            cabecera[i+1]= alfabeto1[i];
         }
-        modelo.setColumnIdentifiers(alfabeto);
+        modelo.setColumnIdentifiers(cabecera);
         tablaTransisiones.setModel(modelo);       
         comboNoEstados.setEnabled(true);
     }//GEN-LAST:event_tfAlfabetoFocusLost
