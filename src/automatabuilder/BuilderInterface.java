@@ -6,6 +6,7 @@
 
 package automatabuilder;
 
+import java.util.ArrayList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -43,6 +44,8 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         tablaTransisiones = new javax.swing.JTable();
         btnGuardar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        cboxE_Inicial = new javax.swing.JComboBox();
         panelDatos = new javax.swing.JPanel();
         tfAlfabeto = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -71,7 +74,7 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         ));
         jScrollPane1.setViewportView(tablaTransisiones);
 
-        btnGuardar.setText("Guardar datos");
+        btnGuardar.setText("Cargar datos");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
@@ -80,6 +83,11 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
 
         jButton2.setText("Borrar datos");
 
+        jLabel4.setText("Estado inicial:");
+
+        cboxE_Inicial.setToolTipText("Selecciona el estado inicial del autómata");
+        cboxE_Inicial.setEnabled(false);
+
         javax.swing.GroupLayout panelTablaLayout = new javax.swing.GroupLayout(panelTabla);
         panelTabla.setLayout(panelTablaLayout);
         panelTablaLayout.setHorizontalGroup(
@@ -87,25 +95,35 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
             .addGroup(panelTablaLayout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTablaLayout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTablaLayout.createSequentialGroup()
+                        .addComponent(btnGuardar)
+                        .addContainerGap())))
+            .addGroup(panelTablaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cboxE_Inicial, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panelTablaLayout.setVerticalGroup(
             panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTablaLayout.createSequentialGroup()
+                .addGap(9, 9, 9)
                 .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTablaLayout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelTablaLayout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(btnGuardar)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnGuardar)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cboxE_Inicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(27, 27, 27))
         );
 
         panelDatos.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -215,6 +233,7 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         for (int i = 0; i < numEstados; i++) {
             modeloActualizado.addRow(new Object[i]);
             tablaTransisiones.setValueAt(estados[i], i, 0);
+            cboxE_Inicial.addItem(estados[i]);
         }
     }//GEN-LAST:event_comboNoEstadosActionPerformed
 
@@ -252,22 +271,27 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
     }//GEN-LAST:event_tfCadenaFocusLost
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-             for (int i = 0; i < tablaTransisiones.getColumnCount(); i++) {
-                for (int j = 0; j < tablaTransisiones.getRowCount(); j++) {
-                    System.out.println("Dato:");
-                }
+        ArrayList<String> transiciones = new ArrayList<>();
+        for (int i = 0; i < tablaTransisiones.getRowCount(); i++) {
+            for (int j = 0; j < tablaTransisiones.getColumnCount(); j++) {
+               System.out.println("Dato obtenido: "+ modelo.getValueAt(i,j));
+               transiciones.add(modelo.getValueAt(i, j).toString());            
+            }
         }
+        cboxE_Inicial.setEnabled(true);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private int numEstados;
     private String[] estados = {"q\u2081","q\u2082","q\u2083","q\u2084","q\u2085","q\u2086","q\u2087","q\u2088","q\u2089","q\u2081\u2080"};
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox cboxE_Inicial;
     private javax.swing.JComboBox comboNoEstados;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelDatos;
     private javax.swing.JPanel panelTabla;
@@ -285,5 +309,11 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         Object data = model.getValueAt(row, column);        
         System.out.println("Los datos modificados son:"+ data.toString());*/
         System.out.println("La tabla ha sido modificiada");
+    }
+    
+    public int funcionTransicion(int e, String s){
+        int estado=0;
+        
+        return estado;
     }
 }
