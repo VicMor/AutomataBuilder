@@ -6,6 +6,9 @@
 
 package automatabuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +19,11 @@ import javax.swing.table.TableModel;
  * @author menegeps
  */
 public class BuilderInterface extends javax.swing.JFrame implements TableModelListener{
-    DefaultTableModel modelo;
+    DefaultTableModel modelo; 
+    String []alfabeto;          //Arreglo que guarda los simbolos del alfabeto
+    String []estadosAutomata;   //Arreglo que guarda los estados del autómata
+    String [][]transiciones;    //Matriz donde se guardan los estados de las transiciones 
+    String []estadosFinales;
     /**
      * Creates new form BuilderInterface
      */
@@ -41,15 +48,20 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         panelTabla = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaTransisiones = new javax.swing.JTable();
-        btnGuardar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnGuardarDatos = new javax.swing.JButton();
+        btnBorrarDatos = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        cboxEstadoInicial = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
+        tfEstadosFinales = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        tfCadena = new javax.swing.JTextField();
+        btnVerficaCadena = new javax.swing.JButton();
         panelDatos = new javax.swing.JPanel();
         tfAlfabeto = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         comboNoEstados = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
-        tfCadena = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Automata Builder  v1.0");
@@ -71,26 +83,79 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         ));
         jScrollPane1.setViewportView(tablaTransisiones);
 
-        btnGuardar.setText("Guardar datos");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardarDatos.setText("Guardar datos");
+        btnGuardarDatos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
+                btnGuardarDatosActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Borrar datos");
+        btnBorrarDatos.setText("Borrar datos");
+
+        jLabel4.setText("Estado inicial:");
+
+        cboxEstadoInicial.setEnabled(false);
+
+        jLabel5.setText("Estados finales:");
+
+        tfEstadosFinales.setEnabled(false);
+        tfEstadosFinales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfEstadosFinalesActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Cadena:");
+
+        tfCadena.setToolTipText("Ingresa la cadena que debera reconocer el autómata");
+        tfCadena.setEnabled(false);
+        tfCadena.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfCadenaFocusLost(evt);
+            }
+        });
+        tfCadena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfCadenaActionPerformed(evt);
+            }
+        });
+
+        btnVerficaCadena.setText("Verificar cadena");
+        btnVerficaCadena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerficaCadenaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTablaLayout = new javax.swing.GroupLayout(panelTabla);
         panelTabla.setLayout(panelTablaLayout);
         panelTablaLayout.setHorizontalGroup(
             panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTablaLayout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTablaLayout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnGuardarDatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnBorrarDatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panelTablaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboxEstadoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfEstadosFinales, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tfCadena, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTablaLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnVerficaCadena)))
                 .addContainerGap())
         );
         panelTablaLayout.setVerticalGroup(
@@ -98,14 +163,24 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
             .addGroup(panelTablaLayout.createSequentialGroup()
                 .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTablaLayout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelTablaLayout.createSequentialGroup()
                         .addGap(34, 34, 34)
-                        .addComponent(btnGuardar)
+                        .addComponent(btnGuardarDatos)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(btnBorrarDatos))
+                    .addGroup(panelTablaLayout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(cboxEstadoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(tfEstadosFinales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(tfCadena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnVerficaCadena)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelDatos.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -136,21 +211,6 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
             }
         });
 
-        jLabel3.setText("Cadena:");
-
-        tfCadena.setToolTipText("Ingresa la cadena que debera reconocer el autómata");
-        tfCadena.setEnabled(false);
-        tfCadena.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tfCadenaFocusLost(evt);
-            }
-        });
-        tfCadena.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfCadenaActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelDatosLayout = new javax.swing.GroupLayout(panelDatos);
         panelDatos.setLayout(panelDatosLayout);
         panelDatosLayout.setHorizontalGroup(
@@ -164,19 +224,13 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboNoEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(tfCadena, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelDatosLayout.setVerticalGroup(
             panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDatosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfCadena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
                     .addComponent(comboNoEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(tfAlfabeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -210,20 +264,25 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
 
     private void comboNoEstadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboNoEstadosActionPerformed
         numEstados = Integer.parseInt(comboNoEstados.getSelectedItem().toString());
+        estadosAutomata = new String[numEstados];
         System.out.println("El número de estados es: "+numEstados);
         DefaultTableModel modeloActualizado = (DefaultTableModel) tablaTransisiones.getModel();
         for (int i = 0; i < numEstados; i++) {
             modeloActualizado.addRow(new Object[i]);
             tablaTransisiones.setValueAt(estados[i], i, 0);
+            cboxEstadoInicial.addItem(estadosUnformateados[i]);                        
+            estadosAutomata[i] ="q"+(i+1);
+            System.out.println("estados["+i+"]: "+estadosAutomata[i]);
         }
     }//GEN-LAST:event_comboNoEstadosActionPerformed
 
     private void tfAlfabetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAlfabetoActionPerformed
-        String []alfabeto = tfAlfabeto.getText().split(",");
+        alfabeto = tfAlfabeto.getText().split(",");
         String []cabecera = new String[alfabeto.length+1];
         cabecera[0] = "Estado/Entrada";
         for (int i = 0; i < alfabeto.length; i++) {
             cabecera[i+1]= alfabeto[i]; 
+            System.out.println("Alfabeto["+i+"]: "+alfabeto[i]);
         }
         modelo.setColumnIdentifiers(cabecera);
         tablaTransisiones.setModel(modelo);       
@@ -235,11 +294,12 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
     }//GEN-LAST:event_tfCadenaActionPerformed
 
     private void tfAlfabetoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfAlfabetoFocusLost
-        String []alfabeto = tfAlfabeto.getText().split(",");
+        alfabeto = tfAlfabeto.getText().split(",");
         String []cabecera = new String[alfabeto.length+1];
         cabecera[0] = "State/Input";
         for (int i = 0; i < alfabeto.length; i++) {
             cabecera[i+1]= alfabeto[i];
+            System.out.println("Alfabeto["+i+"]: "+alfabeto[i]);
         }
         modelo.setColumnIdentifiers(cabecera);
         tablaTransisiones.setModel(modelo);       
@@ -247,33 +307,59 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
     }//GEN-LAST:event_tfAlfabetoFocusLost
 
     private void tfCadenaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfCadenaFocusLost
-        System.out.println("La cadena a reconocer es: "+ tfCadena.getText());
+      
         
     }//GEN-LAST:event_tfCadenaFocusLost
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-             for (int i = 0; i < tablaTransisiones.getColumnCount(); i++) {
-                for (int j = 0; j < tablaTransisiones.getRowCount(); j++) {
-                    System.out.println("Dato:");
+    private void btnGuardarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarDatosActionPerformed
+        transiciones= new String[tablaTransisiones.getRowCount()][tablaTransisiones.getColumnCount()-1];
+        for (int i = 0; i < tablaTransisiones.getRowCount(); i++) {
+                for (int j = 1; j < tablaTransisiones.getColumnCount(); j++) {
+                    transiciones[i][j-1] = modelo.getValueAt(i, j).toString();                    
+                    System.out.println("Posición: ["+(i)+"]["+(j-1)+"]: "+transiciones[i][j-1]);
                 }
-        }
-    }//GEN-LAST:event_btnGuardarActionPerformed
+        }        
+        cboxEstadoInicial.setEnabled(true);
+        tfCadena.setEnabled(true);
+        tfEstadosFinales.setEnabled(true);
+    }//GEN-LAST:event_btnGuardarDatosActionPerformed
+
+    private void tfEstadosFinalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfEstadosFinalesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfEstadosFinalesActionPerformed
+
+    private void btnVerficaCadenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerficaCadenaActionPerformed
+        String estadoIni = cboxEstadoInicial.getSelectedItem().toString();
+        estadosFinales = tfEstadosFinales.getText().split(",");
+        String cadenaCapturada = tfCadena.getText();        
+        String estadoResultado = funcionTransicionMultipaso(estadoIni, cadenaCapturada);
+        if (buscaElemento(estadosFinales, estadoResultado)!=-1)
+            JOptionPane.showMessageDialog(null, "La cadena fue acepada", "Resultado", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(null, "La cadena no fue acepada", "Resultado", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_btnVerficaCadenaActionPerformed
 
     private int numEstados;
     private String[] estados = {"q\u2081","q\u2082","q\u2083","q\u2084","q\u2085","q\u2086","q\u2087","q\u2088","q\u2089","q\u2081\u2080"};
+    private String[] estadosUnformateados = {"q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"};
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnBorrarDatos;
+    private javax.swing.JButton btnGuardarDatos;
+    private javax.swing.JButton btnVerficaCadena;
+    private javax.swing.JComboBox cboxEstadoInicial;
     private javax.swing.JComboBox comboNoEstados;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelDatos;
     private javax.swing.JPanel panelTabla;
     private javax.swing.JTable tablaTransisiones;
     private javax.swing.JTextField tfAlfabeto;
     private javax.swing.JTextField tfCadena;
+    private javax.swing.JTextField tfEstadosFinales;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -283,7 +369,33 @@ public class BuilderInterface extends javax.swing.JFrame implements TableModelLi
         TableModel model = (TableModel)e.getSource();
         String columnName = model.getColumnName(column);
         Object data = model.getValueAt(row, column);        
-        System.out.println("Los datos modificados son:"+ data.toString());*/
-        System.out.println("La tabla ha sido modificiada");
+        System.out.println("Los datos modificados son:"+ data.toString());
+        System.out.println("La tabla ha sido modificiada");*/
     }
+    
+    public String funcionTransicion(String estado, String simbolo){
+        int indiceEstado = buscaElemento(estadosAutomata,estado);        
+        int indiceSimbolo = buscaElemento(alfabeto,simbolo);        
+        return transiciones[indiceEstado][indiceSimbolo];
+    }
+    
+    public String funcionTransicionMultipaso(String estadoActual, String cadena){
+        if (cadena.length() == 1) {               
+            return funcionTransicion(estadoActual,cadena);
+        }
+        char []cadenaCompleta = cadena.toCharArray();
+        char []subcadena = Arrays.copyOfRange(cadenaCompleta, 0, cadenaCompleta.length-1);
+        char []simbolo = Arrays.copyOfRange(cadenaCompleta,cadenaCompleta.length-1, cadenaCompleta.length);
+        String  eActual = funcionTransicionMultipaso(estadoActual,String.valueOf(subcadena));
+        return funcionTransicion(eActual,String.valueOf(simbolo));
+    }
+
+    public int buscaElemento(String conjunto[], String elemento){       
+       for (int i = 0; i < conjunto.length; i++) 
+            if (conjunto[i].compareTo(elemento)== 0) 
+                return i;                                  
+       return -1;        
+    }
+    
+    
 }
